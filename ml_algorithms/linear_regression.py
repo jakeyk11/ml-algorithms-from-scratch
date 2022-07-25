@@ -28,11 +28,11 @@ class SimpleLinearRegression:
         """
 
     def __init__(self, visualisation=True, zero_int=False):
-        """Initialises SimpleLinearRegression class visualisation toggle and zero y-intercept toggle.
+        """Initialises SimpleLinearRegression class.
 
         Args:
-            visualisation (boolean): toggle visualisation of model.
-            zero_int (boolean): specify whether to force y-intercept to zero."""
+            visualisation (boolean, optional): toggle visualisation of model. True by default.
+            zero_int (boolean, optional): specify whether to force y-intercept to zero. True by default."""
 
         # Assign attributes
         self.visualisation = visualisation
@@ -87,7 +87,7 @@ class SimpleLinearRegression:
         # Show model fit
         if self.visualisation:
             self.ax.scatter(self.x, self.y, s=50, marker="o", c='grey')
-            self.ax.plot(self.x, self.m * self.x + self.c, c='w')
+            self.ax.plot(self.x, self.m * self.x + self.c, c='w', lw=0.5)
             if self.c > 0:
                 plt.title(f"Simple Linear Regression Model: y = {np.round(self.m,2)}x + {np.round(self.c,2)}",
                           fontweight="bold", color="w")
@@ -111,6 +111,6 @@ class SimpleLinearRegression:
         # Show prediction
         if self.visualisation:
             self.ax.scatter(features, y_predict, s=50, marker="o", c='r')
-            self.ax.plot(np.append(self.x, features), np.append(self.m * self.x + self.c, y_predict), c='w')
+            self.ax.plot(np.append(self.x, features), np.append(self.m * self.x + self.c, y_predict), lw=0.5, c='w')
 
         return y_predict
