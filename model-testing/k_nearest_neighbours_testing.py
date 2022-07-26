@@ -15,7 +15,7 @@ from ml_algorithms.k_nearest_neighbours import KNearestNeighbours
 
 # %% Create test data
 
-data = {'red':[[1,2],[2,3],[3,1]], 'black':[[6,5],[7,7],[8,6]], 'blue':[[1,8], [3,6], [3,7]]}
+data = {'red':[[1,2],[2,3],[3,1]], 'black':[[6,5],[7,7],[8,6]], 'blue':[[1,8], [3,6], [3,7]], 'green':[[8,1], [8,2], [5,1]]}
 
 # %% Fit model and make predictions
 
@@ -25,7 +25,11 @@ knn_model.fit(data)
 new_features = [[5,7],[7,5],[2,2],[4,7]]
 y_predict, y_confidence = knn_model.predict(new_features)
 
-# %% With a working model, apply it to breast cancer wisconsin dataset
+# %% Visualise model decision boundaries
+
+knn_model.visualise(h=0.5)
+
+# %% With a working model, apply it to higher dimensional problem - breast cancer wisconsin dataset
 
 # Import dataset, replace missing data and remove useless fields
 df = pd.read_csv("../datasets/breast-cancer-wisconsin.data")
@@ -51,7 +55,7 @@ test_features = [item[:-1] for item in test_data]
 test_classes = [item[-1] for item in test_data]
 								
 # Fit model on training data
-knn_model = KNearestNeighbours(visualisation=True, k=3)
+knn_model = KNearestNeighbours(visualisation=False, k=3)
 knn_model.fit(train_dict)
 
 # Make predictions on test data

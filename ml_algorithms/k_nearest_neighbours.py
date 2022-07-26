@@ -9,6 +9,7 @@ kNearestNeighbours
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+from matplotlib.colors import ListedColormap
 import warnings
 from collections import Counter
 
@@ -80,7 +81,7 @@ class KNearestNeighbours:
         self.data = data
 
         # Warn if number of nearest neighbours is larger than number of available features
-        if len(self.data) >= self.k:
+        if sum(len(v) for v in data.values()) <= self.k:
             warnings.warn('k is set to a value less than total available features!')
 
         # Number of classes and class names
@@ -94,7 +95,7 @@ class KNearestNeighbours:
                 for feature_to_plot in self.data[class_to_plot]:
                     self.ax.scatter(feature_to_plot[0], feature_to_plot[1], s=50, color=self.colours[i])
                 self.class_colours[class_to_plot] = self.colours[i]
-            plt.title(f"k Nearest Neighbours Model: {self.class_count} classes", fontweight="bold", color="w")
+            plt.title(f"k Nearest Neighbours Model: k={self.k}, {self.class_count} classes", fontweight="bold", color="w")
 
     def predict(self, features_predict):
         """Make predictions with k nearest neighbours model.
@@ -129,7 +130,65 @@ class KNearestNeighbours:
             y_confidence.append(Counter(votes).most_common(1)[0][1] / self.k)
 
             # Show first two dimensions of data
-            self.ax.scatter(feature_predict[0], feature_predict[1], s=50, color=self.class_colours[current_class],
-                            edgecolor='w')
+            if self.visualisation:
+                self.ax.scatter(feature_predict[0], feature_predict[1], s=50, color=self.class_colours[current_class],
+                                edgecolor='w')
 
         return y_class, y_confidence
+
+    def visualise(self, h=0.5):
+        """Show k nearest neighbours decision boundaries. Only available for 2D features.
+
+        Args:
+            h (float, optional): Step-size for mesh of points used to create decision boundaries. Default is 0.5."""
+
+        fig = plt.figure()
+        ax = fig.add_subplot(1, 1, 1)
+        fig.set_facecolor('#313332')
+        ax.patch.set_alpha(0)
+        ax.grid(visible=True, alpha=0.1)
+        mpl.rcParams['xtick.color'] = 'w'
+        mpl.rcParams['ytick.color'] = 'w'
+        mpl.rcParams['xtick.labelsize'] = 10
+        mpl.rcParams['ytick.labelsize'] = 10
+        spines = ["top", "right", "bottom", "left"]
+        for s in spines:  # Remove top and right spine, and change colour of botton and left to white
+            if s in ["top", "right"]:
+                ax.spines[s].set_visible(False)
+            else:
+                ax.spines[s].set_color('w')
+
+        # Define colourmap
+        cmap_light = ListedColormap(list(self.colours[0:self.class_count]))
+
+        # Calculate minimum and maximum co-ordinates of training data-set
+        xs = [feature[0] for feature in [x for xs in self.data.values() for x in xs]]
+        ys = [feature[1] for feature in [y for ys in self.data.values() for y in ys]]
+        x_min, x_max = min(xs) - 1, max(xs) + 1
+        y_min, y_max = min(ys) - 1, max(ys) + 1
+
+        # Mesh-grid of points
+        xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
+        self.visualisation = False
+        z, z_conf = KNearestNeighbours.predict(self, np.c_[xx.ravel(), yy.ravel()].tolist())
+
+        # Convert classes to numerical identifiers
+        z_identifier = z[:]
+        for i, class_tag in enumerate(self.class_names):
+            for ii, value in enumerate(z):
+                if value == class_tag:
+                    z_identifier[ii] = i
+
+        # Put the result into a color plot
+        z_identifier = np.array(z_identifier).reshape(xx.shape)
+
+        ax.pcolormesh(xx, yy, z_identifier, shading='auto', cmap=cmap_light, alpha=0.2)
+
+        # Plot also the training points
+        for i, point in enumerate(np.c_[xx.ravel(), yy.ravel()].tolist()):
+            ax.scatter(point[0], point[1], c=self.class_colours[z[i]], s=z_conf[i]*h*100)
+
+        plt.title(f"kNN (k={self.k}) decision boundaries and prediction mesh.\nDot size indicates confidence",
+                  fontweight="bold", color="w")
+        plt.xlim(xx.min(), xx.max())
+        plt.ylim(yy.min(), yy.max())
