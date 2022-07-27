@@ -2,8 +2,8 @@
 
 Classes
 ---------
-kNearestNeighbours
-    k nearest neighbours classification model.
+KNearestNeighbours
+    k nearest neighbours multidimensional classification model.
 """
 
 import numpy as np
@@ -15,7 +15,7 @@ from collections import Counter
 
 
 class KNearestNeighbours:
-    """k nearest neighbours classification model.
+    """k nearest neighbours multidimensional classification model.
 
     k nearerst neighbours supervised machine learning model for classification. Compares the Euclidean distance
     between the feature and neighbouring features to determine which class it belongs to.
@@ -32,7 +32,7 @@ class KNearestNeighbours:
         """
 
     def __init__(self, k=3, visualisation=True, colours=('r', 'k', 'b', 'g', 'c', 'y', 'm')):
-        """Initialises kNearestNeighbours class.
+        """Initialises KNearestNeighbours class.
 
         Args:
             k (int, optional): Number of nearest neighbours to use for classification. 3 by default.
@@ -157,6 +157,8 @@ class KNearestNeighbours:
                 ax.spines[s].set_visible(False)
             else:
                 ax.spines[s].set_color('w')
+        plt.title(f"kNN (k={self.k}) decision boundaries and prediction mesh.\nDot size indicates confidence",
+                  fontweight="bold", color="w")
 
         # Define colourmap
         cmap_light = ListedColormap(list(self.colours[0:self.class_count]))
@@ -188,7 +190,5 @@ class KNearestNeighbours:
         for i, point in enumerate(np.c_[xx.ravel(), yy.ravel()].tolist()):
             ax.scatter(point[0], point[1], c=self.class_colours[z[i]], s=z_conf[i]*h*100)
 
-        plt.title(f"kNN (k={self.k}) decision boundaries and prediction mesh.\nDot size indicates confidence",
-                  fontweight="bold", color="w")
         plt.xlim(xx.min(), xx.max())
         plt.ylim(yy.min(), yy.max())
