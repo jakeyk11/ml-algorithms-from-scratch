@@ -27,7 +27,7 @@ class SupportVectorMachine:
         min_feature_value (float): minimum value of any feature in the training data set.
         w (numpy.array): description of vector through origin perpendicular to the svm seperating hyperplane
         b (float): constant or bias that dictates translation/position of seperating hyperplane
-        visualisation (bool): Specification of whether predicted response is graphically displayed.
+        visualisation (bool): Specification of whether data and predictions are graphically displayed.
         fig (matplotlib.pyplot.figure): Figure window on which model is displayed (None if not displayed)
         ax (matplotlib.pyplot.axes): Axes object on which model is displayed (None if not displayed)
         """

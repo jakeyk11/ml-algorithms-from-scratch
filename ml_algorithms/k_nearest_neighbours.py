@@ -26,7 +26,7 @@ class KNearestNeighbours:
         class_names (list): class names.
         colours (tuple): colours to be associated with classes
         class_colours (dict): mapping of classes to colours
-        visualisation (bool): Specification of whether predicted response is graphically displayed.
+        visualisation (bool): Specification of whether data and predictions are graphically displayed.
         fig (matplotlib.pyplot.figure): Figure window on which model is displayed (None if not displayed)
         ax (matplotlib.pyplot.axes): Axes object on which model is displayed (None if not displayed)
         """
@@ -77,12 +77,12 @@ class KNearestNeighbours:
         Args:
             data (dict): nested list of features (values) that correspond to each class (keys)"""
 
-        # Overwrite data attributes
+        # Overwrite data attribute
         self.data = data
 
         # Warn if number of nearest neighbours is larger than number of available features
         if sum(len(v) for v in data.values()) <= self.k:
-            warnings.warn('k is set to a value less than total available features!')
+            warnings.warn('k is set to a value greater than total available features!')
 
         # Number of classes and class names
         self.class_count = len(data.keys())
