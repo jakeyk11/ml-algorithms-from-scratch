@@ -1,28 +1,29 @@
-"""Module containing k means models for implementation within data science projects.
+"""Module containing mean shift models for implementation within data science projects.
 
 Classes
 ---------
-kMeans
-    k means multidimensional flat clustering model.
+MeanShift
+    Mean shift multidimensional hierarchical clustering model.
 """
 
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-import warnings
 
 
-class KMeans:
-    """k means multidimensional flat clustering model.
+class MeanShift:
+    """Mean shift multidimensional flat clustering model.
 
-    k means unsupervised machine learning model for classification. Based on a definition of the number of clusters,
-    centroids are randomly positioned and features classified based on the centroid to which they are closest.
-    Centroids are re-positioned at the mean location of the new "feature sets". This process is repeated until the
-    centroids move within a defined tolerance (or maximum number of steps).
+    Mean shift unsupervised machine learning model for classification. Every feature is initially defined as a
+    cluster centre, with a bandwidth (area) created around it. Other features within the bandwidth are identified,
+    and the mean used to define new cluster centers. This process is repeated until the centroids move within a
+    defined tolerance (or maximum number of steps). With a simple bandwidth definition, clusters quickly capture too
+    many data points and a hierarchy of bandwidths, or dynamic bandwidth, is applied to help with this.
 
     Attributes:
         data (numpy.array): array of features (values) to classify.
-        k (int): number of classes or clusters.
+        bandwidth (float): radius for grouping centroids.
+        bandwidth_norm_step (float): step size for application of dynamic bandwidth.
         tol (float): tolerance, or percentage distance below which centroids must move to complete clustering.
         max_iter (int): maximum number of iterations permissible.
         centroids (dict): position of centroid for each class
@@ -34,19 +35,22 @@ class KMeans:
         ax (matplotlib.pyplot.axes): Axes object on which model is displayed (None if not displayed)
         """
 
-    def __init__(self, k=2, tol=0.001, max_iter=300, visualisation=True, colours=('r', 'k', 'b', 'g', 'c', 'y', 'm')):
-        """Initialises KMeans class.
+    def __init__(self, bandwidth=None, bandwidth_norm_step=100, tol=0.0001, max_iter=1000000, visualisation=True,
+                 colours=('r', 'k', 'b', 'g', 'c', 'y', 'm')):
+        """Initialises MeanShift class.
 
         Args:
-            k (int, optional): Number of classes or clusters. 2 by default.
-            tol (float, optional): tolerance, or percentage distance below which centroids must move to complete clustering. 0.001 by default.
-            max_iter (int, optional): maximum number of iterations permissible. 300 by default.
+            bandwidth (float, optional): radius for grouping centroids. None by default, triggering automatic calculation.
+            bandwidth_norm_step (float, optional): step size for application of dynamic bandwidth. 100 by default.
+            tol (float, optional): tolerance, or percentage distance below which centroids must move to complete clustering. 0.0001 by default.
+            max_iter (int, optional): maximum number of iterations permissible. 1000000 by default.
             visualisation (boolean, optional): toggle visualisation of model. True by default.
             colours (tuple, optional): colours to be associated with classes. ('r', 'k', 'b', 'g', 'c', 'y', 'm') by default.
             """
 
         # Assign attributes
-        self.k = k
+        self.bandwidth = bandwidth
+        self.bandwidth_norm_step = bandwidth_norm_step
         self.tol = tol
         self.max_iter = max_iter
         self.visualisation = visualisation
@@ -87,36 +91,73 @@ class KMeans:
         # Overwrite data attribute
         self.data = data
 
-        # Warn if number of classes is larger than number of available features
-        if len(data) <= self.k:
-            warnings.warn('k is set to a value greater than total available features!')
+        # Calculate appropriate bandwidth if user does not specify (by defining magnitude of centroid on all data)
+        if self.bandwidth is None:
+            all_data_centroid = np.average(data, axis=0)
+            all_data_norm = np.linalg.norm(all_data_centroid)
+            self.bandwidth = all_data_norm / self.bandwidth_norm_step
 
-        # Set the initial location of the k centroids to be at the first k data points
-        for i in range(self.k):
+        # Set the initial location of centroids to be at the data point positions
+        for i in range(len(data)):
             self.centroids[i] = data[i]
+
+        # Define weights as a list starting at bandwidth_norm_step-1, and reducing down to 1.
+        weights = [i for i in range(self.bandwidth_norm_step)][::-1]
 
         # Begin optimisation process, within constraint of maximum iterations
         for iteration in range(self.max_iter):
-            self.classifications = {}
+            new_centroids = []
 
-            # Initialise classification dictionary for each iteration
-            for i in range(self.k):
-                self.classifications[i] = []
+            # For each centroid, determine data points within its bandwidth and hence updated centroid position
+            for i in self.centroids:
+                in_bandwidth = []
+                centroid = self.centroids[i]
 
-            # For each feature, calculate its distance to each centroid and classify based on smallest distance
-            for feature in data:
-                distances = [np.linalg.norm(feature - self.centroids[c]) for c in self.centroids]
-                closest_centroid = distances.index(min(distances))
+                # For each feature, calculate its distance to centroid and check if within bandwidth
+                for feature in data:
+                    distance = np.linalg.norm(feature - centroid)
 
-                # Build up clusters
-                self.classifications[closest_centroid].append(feature)
+                    # If distance is 0 (as in 1st step where centroids = features), adjust for mathematical convenience
+                    if distance == 0:
+                        distance = 0.000001
+
+                    # Determine weight index for features within bandwidth, based on proximity to centroid
+                    weight_index = int(distance / self.bandwidth)
+                    if weight_index > self.bandwidth_norm_step - 1:
+                        weight_index = self.bandwidth_norm_step - 1
+
+                    # Apply weighting through duplicating features according to weight^2
+                    features_to_add = (weights[weight_index] ** 2) * [feature]
+                    in_bandwidth += features_to_add
+
+                # Update centroid position and add to list of centroids
+                new_centroid = np.average(in_bandwidth, axis=0)
+                new_centroids.append(tuple(new_centroid))
+
+            # Define sorted list of unique centroids in current iteration
+            unique_centroids = sorted(list(set(new_centroids)))
+            to_pop = []
+
+            # Remove centroids that are within one bandwidth of one another, by tagging them in the to_pop list
+            for unique_centroid in unique_centroids:
+                if unique_centroid in to_pop:
+                    pass
+                for another_unique_centroid in unique_centroids:
+                    if unique_centroid == another_unique_centroid:
+                        pass
+                    elif (np.linalg.norm(np.array(unique_centroid) - np.array(another_unique_centroid)) <=
+                          self.bandwidth) and another_unique_centroid not in to_pop:
+                        to_pop.append(another_unique_centroid)
+            for centroid_to_remove in to_pop:
+                unique_centroids.remove(centroid_to_remove)
 
             # Before repositioning centroids, store current value for later comparison
             previous_centroids = dict(self.centroids)
 
-            # Reposition centroids based on mean of each cluster
-            for cluster in self.classifications:
-                self.centroids[cluster] = np.average(self.classifications[cluster], axis=0)
+            # Reposition centroids
+            self.centroids = {}
+            for centroid in range(len(unique_centroids)):
+                self.centroids[centroid] = np.array(unique_centroids[centroid])
 
             optimised = True
 
@@ -131,6 +172,16 @@ class KMeans:
             if optimised:
                 break
 
+        # Initialise classifications list with cluster keys
+        for cluster in range(len(self.centroids)):
+            self.classifications[cluster] = []
+
+        # Assign each feature to a cluster based on distance to centroids
+        for feature in data:
+            distances = [np.linalg.norm(feature - self.centroids[c]) for c in self.centroids]
+            classification = distances.index(min(distances))
+            self.classifications[classification].append(feature)
+
         # Show first two dimensions of data
         if self.visualisation:
             self.class_colours = dict()
@@ -138,10 +189,11 @@ class KMeans:
                 for feature in self.classifications[cluster]:
                     self.ax.scatter(feature[0], feature[1], s=50, color=self.colours[i])
                 self.class_colours[cluster] = self.colours[i]
-            plt.title(f"k Means Model: {self.k} classes", fontweight="bold", color="w")
+            plt.title(f"Mean Shift Model: {len(self.classifications)} classes, Bandwidth = {round(self.bandwidth,2)}",
+                      fontweight="bold", color="w")
 
     def predict(self, features_predict):
-        """Make predictions with k means model.
+        """Make predictions with mean shift model.
 
         Args:
             features_predict (list): List of features to classify
@@ -166,7 +218,7 @@ class KMeans:
         return y_class
 
     def visualise(self):
-        """Show k means centroids. Only available for 2D features."""
+        """Show mean shift centroids. Only available for 2D features."""
 
         fig = plt.figure()
         ax = fig.add_subplot(1, 1, 1)
@@ -183,7 +235,7 @@ class KMeans:
                 ax.spines[s].set_visible(False)
             else:
                 ax.spines[s].set_color('w')
-        plt.title(f"k Means (k={self.k}) centroids", fontweight="bold", color="w")
+        plt.title(f"Mean Shift Centroids", fontweight="bold", color="w")
 
         # Plot training points
         for i, cluster in enumerate(self.classifications):
