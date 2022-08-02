@@ -71,9 +71,9 @@ The following open source packages are used in this project:
 * Sys
 * OS
 
-The ML algorithms are individual modules contained within a pacakge named ml_algorithms. Given that the package has not yet been formally deployed, it is advised that the user takes the following steps:
+The ML algorithms that have been developed are contained within a pacakge named <a href="https://github.com/jakeyk11/ml-algorithms-from-scratch/tree/main/ml_algorithms">ml_algorithms</a>. Given that the package has not yet been formally deployed, it is advised that the user takes the following steps:
 <ol>
-  <li>Clone the project and save to a local repository</li>
+  <li>Clone the project and save to a local area</li>
   <li>Add the ml_algorithms directory to the environment path</li>
   <li>Import the required machine learning algorithm</li>
 </ol>
