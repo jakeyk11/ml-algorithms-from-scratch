@@ -91,7 +91,7 @@ For convenience, the project directory contains an area to store data (<a href="
 
 Straightforward approach for predicting a quantitative response on the basis of a single predictor variable, with an assumption that there is an approximately linear relationship between response and predictor. Required inputs are: (i) training data and (ii) specification of whether to force the y-intercept of the linear model to zero. 
 
-**Example:** The linear regression model (with non-zero y-intercept) was fit to six points in the cartesian co-ordinate space (grey points). The result is a linear model of form y = mx + c, which is then used to predict the response for three featyres (red points.)
+**Example:** The linear regression model (with non-zero y-intercept) was fit to six points in the cartesian co-ordinate space (grey points). The result is a linear model of form y = mx + c, which is then used to predict the response for three features (red points.)
 
 <p align="center">
   <img width="35%" src="./model_testing/images/linear_regression_example.png"> &nbsp &nbsp
@@ -99,9 +99,9 @@ Straightforward approach for predicting a quantitative response on the basis of 
 
 ### k Nearest Neighbours
 
-Classification model that identifies the k points in the multi-dimensional training data that are closest to the test point (by euclidean distance), estimates the conditional probability that the test point belongs to each class, and then assigns the test point to the class with the largest probability. Required inputs are: (i) training data and (ii) number of nearest neighbours to use for classification, k.
+Classification model that; identifies the k points in the multi-dimensional training data that are closest to the test point (by euclidean distance), estimates the conditional probability that the test point belongs to each class, and then assigns the test point to the class with the largest probability. Required inputs are: (i) training data and (ii) number of nearest neighbours to use for classification, k.
 
-**Example:** The kNN classification model (with k=3) was used to classify four features (points with white outlines) to one of four classes (represented by red, black, green and blue points) in the cartesian co-ordinate space. The kNN visualise method was used to classify a generic grid of test points and show decision boundaries. Note that the size of the test points represent the confidence with which classifications are made.
+**Example:** The kNN classification model (with k=3) was used to classify four features (points with white outlines) to one of four classes (represented by red, black, green and blue points) in the cartesian co-ordinate space. The kNN visualise method was used to classify a generic grid of test points and show decision boundaries. Note that the size of the test points represent the confidence with which classifications were made.
 
 <p align="center">
   <img width="35%" src="./model_testing/images/knn_example.png"> &nbsp &nbsp
