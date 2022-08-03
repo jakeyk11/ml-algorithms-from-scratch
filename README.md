@@ -44,15 +44,7 @@ Python implementation of a variety of Machine Learning (ML) algorithms from scra
     │ 
     ├── model_testing 
     │   ├── images
-    │   │   ├── k_means_centroid_example.png
-    │   │   ├── k_means_example.png
-    │   │   ├── knn_boundary_example.png
-    │   │   ├── knn_example.png
-    │   │   ├── linear_regression_example.png
-    │   │   ├── mean_shift_centroid_example.png
-    │   │   ├── mean_shift_example.png
-    │   │   ├── svm_boundary_example.png
-    │   │   ├── svm_example.png
+    │   │   ├── ___.png
     │   ├── k_means_testing.py    
     │   ├── k_nearest_neighbours_testing.py
     │   ├── linear_regression_testing.py
