@@ -74,7 +74,7 @@ The ML algorithms that have been developed are contained within a pacakge named 
   <li>Import the required machine learning algorithm</li>
 </ol>
 
-For example, to load the linear regression algorithm, the following code may be written within Python:
+For example, to load the linear regression algorithm when working within the <a href="https://github.com/jakeyk11/ml-algorithms-from-scratch/tree/main/model_testing">model_testing</a> directory, the following code may be written within Python:
 
     import os
     import sys
