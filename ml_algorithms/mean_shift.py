@@ -22,7 +22,7 @@ class MeanShift:
 
     Attributes:
         data (numpy.array): array of features (values) to classify.
-        bandwidth (float): radius for grouping centroids.
+        bandwidth (float): radius for grouping features.
         bandwidth_norm_step (float): step size for application of dynamic bandwidth.
         tol (float): tolerance, or percentage distance below which centroids must move to complete clustering.
         max_iter (int): maximum number of iterations permissible.
