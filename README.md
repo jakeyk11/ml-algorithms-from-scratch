@@ -145,6 +145,23 @@ Hierarchical unsupervised classification model based on kernel density estimatio
 
 ## Inspiration
 
-<li>
-  Source 1  
-</li>
+<ul>
+  <li>
+    <p> G. James, D. Witten, T. Hastie & R. Tibshirani. An Introduction to Statistical Learning, with Applications in R. 2nd Ed. Springer, 2021 </p>
+  </li>
+  <li>
+    <p>
+      H. Kinsley. 'Practical Machine Learning with Python', 2017 [online]. Available: https://pythonprogramming.net/machine-learning-tutorial-python-introduction/ 
+    </p>
+  </li>
+  <li>
+    <p>
+      H. Kinsley & D. Kukiela. Neural Networks from Scratch, 1st Ed. Harrison Kinsley, 2020
+    </p>
+  </li>
+    <li>
+    <p>
+      H. Kinsley. 'Neural Networks from Scratch in Python', 2021 [online]. Available: https://www.youtube.com/playlist?list=PLQVvvaa0QuDcjD5BAw2DxE6OF2tius3V3
+    </p>
+  </li>
+</ul>
