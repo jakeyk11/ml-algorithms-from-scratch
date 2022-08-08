@@ -24,7 +24,7 @@ This repository contains a collection of Machine learning algorithms developed f
 </details>
 
 ## Project Description
-Python implementation of a variety of Machine Learning (ML) algorithms from scratch, drawing <a href="#inspiration">inspiration</a> from various tutorials and training courses. This work involves the application of Object-Oriented Programming to produce supervised and unsupervised ML models, with the neccessary testing completed in order to demonstrate performance. Each ML algorithm is represented as an object that includes fit, predict and visualise methods to not only provide the functionality, but give the user a visual represetation of the statistical methods applied.
+Python implementation of a variety of Machine Learning (ML) algorithms from scratch, drawing <a href="#inspiration">inspiration</a> from various tutorials and training courses. This work involves the application of Object-Oriented Programming to produce supervised and unsupervised ML models, with the neccessary testing completed in order to demonstrate performance. Each ML algorithm is represented as an object that includes fit, predict and visualise methods to not only provide the functionality, but give the user a visual reprensetation of the statistical methods applied.
 
 ## Folder Structure
 
@@ -67,7 +67,7 @@ The following open source packages are used in this project:
 * Sys
 * OS
 
-The ML algorithms that have been developed are contained within a pacakge named <a href="https://github.com/jakeyk11/ml-algorithms-from-scratch/tree/main/ml_algorithms">ml_algorithms</a>. Given that the package has not yet been formally deployed, it is advised that the user takes the following steps:
+The ML algorithms that have been developed are contained within a package named <a href="https://github.com/jakeyk11/ml-algorithms-from-scratch/tree/main/ml_algorithms">ml_algorithms</a>. Given that the package has not yet been formally deployed, it is advised that the user takes the following steps:
 <ol>
   <li>Clone the project and save to a local area</li>
   <li>Add the ml_algorithms directory to the environment path</li>
